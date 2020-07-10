@@ -246,7 +246,7 @@ will cause performances issues.")
 
 (defun lsp-ui-peek--make-footer ()
   ;; Character-only terminals don't support characters of different height
-  (when (display-graphic-p)
+  (if (display-graphic-p)
     (list
      (concat
       (propertize " "
@@ -258,7 +258,18 @@ will cause performances issues.")
                   'face `(:background ,(face-background 'lsp-ui-peek-footer nil t) :height 1)
                   'display `(space :align-to (- right-fringe 0)))
       (propertize "\n" 'face '(:height 1))
-      (propertize "\n" 'face '(:height 0.5))))))
+      (propertize "\n" 'face '(:height 0.5))))
+    (list
+     (concat
+      (propertize " "
+                  'face `(:background ,(face-background 'lsp-ui-peek-footer nil t))
+                  'display `(space :align-to (- right-fringe ,(1+ lsp-ui-peek-list-width))))
+      (propertize " "
+                  'display `(space :align-to (- right-fringe ,lsp-ui-peek-list-width)))
+      (propertize " "
+                  'face `(:background ,(face-background 'lsp-ui-peek-footer nil t))
+                  'display `(space :align-to (- right-fringe 1)))
+      (propertize "\n" 'face `(:background ,(face-background 'lsp-ui-peek-footer nil t)))))))
 
 (defun lsp-ui-peek--peek-new (src1 src2)
   (-let* ((win-width (- (window-text-width)
